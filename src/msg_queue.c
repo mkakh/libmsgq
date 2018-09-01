@@ -50,7 +50,6 @@ MSG_QUEUE_T *mq_open_wrapper(const char *name) {
  **************************************************/
 int mq_receive_wrapper(MSG_QUEUE_T *msgQueue, ULONG *msg_ptr, size_t msg_len, unsigned int *msg_prio) {
     ULONG *ulBuf;
-    //const char *name = msgQueue->name;
     mqd_t mqd = msgQueue->mqd;
 
     struct mq_attr attr;
