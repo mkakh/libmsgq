@@ -5,7 +5,6 @@
 #include "../../inc/lib.h"
 #include "../../inc/msg_queue.h"
 #define MAX_THREAD 2
-#define N 20
 
 typedef struct {
     ULONG num;
@@ -18,18 +17,18 @@ int changed = 0;
 
 /**************************************************
  * 関数名: read_data
- * 引数  : なし
- * 内容  : 同ディレクトリ内のdata.txtを読み込む
+ * 引数  : char *filename ファイル名
+ * 内容  : ファイルからデータを読み込む
  * 作成日: 2018/09/02
  **************************************************/
-static DATA_T *read_data() {
+static DATA_T *read_data(const char *filename) {
     FILE *fp;
     DATA_T *data = calloc(1, sizeof(DATA_T));
     const int buf_size = 200;
     char buf[buf_size];
     ULONG ct;
 
-    if ((fp = fopen("data.txt", "r")) == NULL) {
+    if ((fp = fopen(filename, "r")) == NULL) {
         PERROR(__FUNCTION__);
         exit(EXIT_FAILURE);
     }
@@ -106,7 +105,7 @@ static void *subthread(void *vMsgQue) {
             PERROR(__FUNCTION__);
             exit(EXIT_FAILURE);
         }
-        for (ULONG i = init; i < N-1; i+=2) {
+        for (ULONG i = init; i < data->num-1; i+=2) {
             if (data->data[i] > data->data[i+1]) {
                 swap(&data->data[i], &data->data[i+1]);
                 changed = 1;
@@ -120,18 +119,25 @@ static void *subthread(void *vMsgQue) {
 
 /**************************************************
  * 関数名: main
- * 引数  : なし
+ * 引数  : int argc       引数の数
+ *         char *argv[]   引数の中身（データファイルのPATH）
  * 内容  : メイン関数
  * 作成日: 2018/09/02
  **************************************************/
-int main(void) {
+int main(int argc, char *argv[]) {
     MSG_QUEUE_T *msgQueue[MAX_THREAD];
     ULONG msg[4] = {0};
     char *tmp[MAX_THREAD] = {"0", "1"};
     pthread_t tid[MAX_THREAD];
 
+    /* 引数チェック */
+    if (argc != 2) {
+        printf("Usage: %s [filename]\n", argv[0]);
+        exit(EXIT_FAILURE);
+    }
+
     /* データの読み込み */
-    data = read_data();
+    data = read_data(argv[1]);
 
     /* スレッド＆メッセージキュー作成 */
     for (int i = 0; i < MAX_THREAD; i++) {
