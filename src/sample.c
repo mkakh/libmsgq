@@ -4,37 +4,33 @@
 #include <unistd.h>
 #include "../inc/lib.h"
 #include "../inc/msg_queue.h"
-#define MAX_THREAD 4
+#define MAX_THREAD 8
 
-void *subthread(void *vId) {
-    char *stId = (char *)vId;
+void *subthread(void *vMsgQue) {
+    MSG_QUEUE_T *msgQue = (MSG_QUEUE_T *)vMsgQue;
     ULONG msg[4] = {0};
-    MSG_QUE_READ(stId, msg, sizeof(msg), 0);
-    printf("Thread: %s\n", (char *)msg[0]);
+    MSG_QUE_READ(msgQue, msg, sizeof(msg), 0);
+    printf("Thread: %lu\n", msg[0]);
     return NULL;
 }
 
 int main(void) {
-    mqd_t mqd[MAX_THREAD];
-    char *msgQueId[MAX_THREAD];
+    MSG_QUEUE_T *msgQueue[MAX_THREAD];
     ULONG msg[4] = {0};
+    char *tmp[MAX_THREAD];
     pthread_t tid[MAX_THREAD];
 
     for (int i = 0; i < MAX_THREAD; i++) {
-        msgQueId[i] = char_to_string('0' + i);
+        tmp[i] = char_to_string('0' + i);
     }
 
     for (int i = 0; i < MAX_THREAD; i++) {
-        if ((mqd[i] = MSG_QUE_CREATE(msgQueId[i])) == -1) {
-            PERROR(__FUNCTION__);
-            exit(EXIT_FAILURE);
-        }
-        pthread_create(&tid[i], NULL, subthread, msgQueId[i]);
+        msgQueue[i] = MSG_QUE_CREATE(tmp[i]);
+        pthread_create(&tid[i], NULL, subthread, msgQueue[i]);
     }
     for (int i = 0; i < MAX_THREAD; i++) {
-        char *str = msgQueId[i];
-        msg[0] = (ULONG)str;
-        if (MSG_QUE_SEND(mqd[i], msg, sizeof(msg), 0) == -1) {
+        msg[0] = i;
+        if (MSG_QUE_SEND(msgQueue[i], msg, sizeof(msg), 0) == -1) {
             PERROR(__FUNCTION__);
             exit(EXIT_FAILURE);
         }
@@ -43,7 +39,7 @@ int main(void) {
         pthread_join(tid[i], NULL);
     }
     for (int i = 0; i < MAX_THREAD; i++) {
-        MSG_QUE_CLOSE(&mqd[i], msgQueId[i]);
+        MSG_QUE_CLOSE(msgQueue[i]);
     }
     return EXIT_SUCCESS;
 }
