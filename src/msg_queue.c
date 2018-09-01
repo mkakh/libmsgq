@@ -29,12 +29,11 @@ MSG_QUEUE_T *mq_open_wrapper(const char *name) {
     MSG_QUEUE_T *tmp = calloc(1, sizeof(MSG_QUEUE_T));
     char buf[MAX_QUEUE_NAME_SIZE+1] = {0};
     snprintf(buf, MAX_QUEUE_NAME_SIZE, "/que_%s", name);
-    mq_unlink(name);
+    mq_unlink(buf);
     if ((tmp->mqd = mq_open(buf, O_RDWR | O_CREAT , FILE_MODE, NULL)) == -1) {
         PERROR(__FUNCTION__);
         exit(EXIT_FAILURE);
     }
-    //strcpy(tmp->name, name);
     tmp->name = name;
     return tmp;
 }
@@ -50,12 +49,19 @@ MSG_QUEUE_T *mq_open_wrapper(const char *name) {
  **************************************************/
 int mq_receive_wrapper(MSG_QUEUE_T *msgQueue, ULONG *msg_ptr, size_t msg_len, unsigned int *msg_prio) {
     ULONG *ulBuf;
-    mqd_t mqd = msgQueue->mqd;
-
     struct mq_attr attr;
+    char buf[MAX_QUEUE_NAME_SIZE+1] = {0};
+    mqd_t mqd;
+
+    snprintf(buf, MAX_QUEUE_NAME_SIZE, "/que_%s", msgQueue->name);
+
+    if ((mqd = mq_open(buf, O_RDONLY)) == -1) {
+        PERROR(__FUNCTION__);
+        exit(EXIT_FAILURE);
+    }
+
     mq_getattr(mqd, &attr);
     ulBuf = calloc(1, attr.mq_msgsize);
-
     if (mq_receive(mqd, (char *)ulBuf, attr.mq_msgsize, 0) == -1) {
         PERROR(__FUNCTION__);
         return -1;

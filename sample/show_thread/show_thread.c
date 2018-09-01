@@ -2,11 +2,11 @@
 #include <stdlib.h>
 #include <pthread.h>
 #include <unistd.h>
-#include "../inc/lib.h"
-#include "../inc/msg_queue.h"
+#include "../../inc/lib.h"
+#include "../../inc/msg_queue.h"
 #define MAX_THREAD 8
 
-void *subthread(void *vMsgQue) {
+static void *subthread(void *vMsgQue) {
     MSG_QUEUE_T *msgQue = (MSG_QUEUE_T *)vMsgQue;
     ULONG msg[4] = {0};
     MSG_QUE_READ(msgQue, msg, sizeof(msg), 0);
