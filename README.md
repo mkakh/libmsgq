@@ -4,7 +4,7 @@
 
 mqueueを使っています．
 
-|名前                 | 用途                |
+|関数名                 | 用途                |
 |:--------------------|:--------------------|
 |MSG_QUE_CREATE(const char *name) |指定された名前のメッセージキューを作成．|
 |MSG_QUE_SEND(mqd_t mqd, const unsigned long *msg_ptr, size_t msg_len, unsigned int prio)| メッセージを送信する．|
