@@ -7,19 +7,85 @@
 #define MAX_THREAD 2
 #define N 20
 
-int data[N] = {100, 21, 450, 29, 30, 500, 20, 60, 80, 100, 60, 24, 540, 10, 102, -193, 4, 0, -123, 84};
+typedef struct {
+    ULONG num;
+    long *data;
+} DATA_T;
+
+DATA_T *data;
 int changed = 0;
-static void swap(int *a, int *b) {
-    int tmp = *b;
+
+
+/**************************************************
+ * 関数名: read_data
+ * 引数  : なし
+ * 内容  : 同ディレクトリ内のdata.txtを読み込む
+ * 作成日: 2018/09/02
+ **************************************************/
+static DATA_T *read_data() {
+    FILE *fp;
+    DATA_T *data = calloc(1, sizeof(DATA_T));
+    const int buf_size = 200;
+    char buf[buf_size];
+    ULONG ct;
+
+    if ((fp = fopen("data.txt", "r")) == NULL) {
+        PERROR(__FUNCTION__);
+        exit(EXIT_FAILURE);
+    }
+
+    /* 行数を数える */
+    data->num = 0;
+    while (fgets(buf, buf_size, fp) != NULL) {
+        data->num++;
+    }
+
+    /* 読み込み位置を初期化 */
+    rewind(fp);
+
+    /* データ取得 */
+    data->data = calloc(data->num, sizeof(long));
+    ct = 0;
+    while (fgets(buf, buf_size, fp) != NULL) {
+        data->data[ct] = atol(buf);
+        ct++;
+    }
+    fclose(fp);
+    return data;
+}
+
+/**************************************************
+ * 関数名: swap
+ * 引数  : long *a  入れ替えたい数値
+ *         long *b  入れ替えたい数値
+ * 内容  : swapする
+ * 作成日: 2018/09/02
+ **************************************************/
+static void swap(long *a, long *b) {
+    long tmp = *b;
     *b = *a;
     *a = tmp;
 }
+
+/**************************************************
+ * 関数名: show_data
+ * 引数  : なし
+ * 内容  : データを表示
+ * 作成日: 2018/09/02
+ **************************************************/
 static void show_data() {
-    for (int i = 0; i < N; i++) {
-        printf("%d\n", data[i]);
+    for (ULONG i = 0; i < data->num; i++) {
+        printf("%ld\n", data->data[i]);
     }
 }
 
+/**************************************************
+ * 関数名: subthread
+ * 引数  : void *vMsgQue  メッセージキュー構造体
+ * 内容  : ソートのメイン処理
+ * 作成日: 2018/09/02
+ * 備考  : 現在ここにバグがあり，うまく動いていない
+ **************************************************/
 static void *subthread(void *vMsgQue) {
     MSG_QUEUE_T *msgQue = (MSG_QUEUE_T *)vMsgQue;
     ULONG msg[4] = {0};
@@ -40,9 +106,9 @@ static void *subthread(void *vMsgQue) {
             PERROR(__FUNCTION__);
             exit(EXIT_FAILURE);
         }
-        for (int i = init; i < N-1; i+=2) {
-            if (data[i] > data[i+1]) {
-                swap(&data[i], &data[i+1]);
+        for (ULONG i = init; i < N-1; i+=2) {
+            if (data->data[i] > data->data[i+1]) {
+                swap(&data->data[i], &data->data[i+1]);
                 changed = 1;
             }
         }
@@ -52,11 +118,20 @@ static void *subthread(void *vMsgQue) {
     return NULL;
 }
 
+/**************************************************
+ * 関数名: main
+ * 引数  : なし
+ * 内容  : メイン関数
+ * 作成日: 2018/09/02
+ **************************************************/
 int main(void) {
     MSG_QUEUE_T *msgQueue[MAX_THREAD];
     ULONG msg[4] = {0};
     char *tmp[MAX_THREAD] = {"0", "1"};
     pthread_t tid[MAX_THREAD];
+
+    /* データの読み込み */
+    data = read_data();
 
     /* スレッド＆メッセージキュー作成 */
     for (int i = 0; i < MAX_THREAD; i++) {
