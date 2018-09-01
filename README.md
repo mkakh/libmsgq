@@ -5,6 +5,7 @@
 mqueueを使っています．
 
 構造体：MSG_QUEUE_T
+
 |メンバ名|用途|
 |:------|:-------|
 |mqd_t mqd | mqueueの構造体|
