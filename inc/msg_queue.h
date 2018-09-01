@@ -42,6 +42,6 @@ mqd_t mq_open_wrapper(const char *name);
  * 内容  : メッセージを受け取る
  * 作成日: 2018/09/01
  **************************************************/
-int mq_receive_wrapper(const char *name, ULONG *msg_ptr, size_t msg_len, unsigned *msg_prio);
+int mq_receive_wrapper(const char *name, ULONG *msg_ptr, size_t msg_len, unsigned int *msg_prio);
 
 #endif /* MSG_QUEUE_H */
