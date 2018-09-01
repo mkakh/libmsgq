@@ -4,7 +4,7 @@
 #include <unistd.h>
 #include "../inc/lib.h"
 #include "../inc/msg_queue.h"
-#define MAX_THREAD 8
+#define MAX_THREAD 4
 
 void *subthread(void *vId) {
     char *stId = (char *)vId;
@@ -40,10 +40,10 @@ int main(void) {
         }
     }
     for (int i = 0; i < MAX_THREAD; i++) {
-        MSG_QUE_CLOSE(&mqd[i], msgQueId[i]);
+        pthread_join(tid[i], NULL);
     }
     for (int i = 0; i < MAX_THREAD; i++) {
-        pthread_join(tid[i], NULL);
+        MSG_QUE_CLOSE(&mqd[i], msgQueId[i]);
     }
     return EXIT_SUCCESS;
 }
