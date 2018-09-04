@@ -10,6 +10,6 @@ depcomp
 lib
 missing
 src/.deps
-src/Makefile*
+src/Makefile
 stamp-h1
 sample/odd_even
