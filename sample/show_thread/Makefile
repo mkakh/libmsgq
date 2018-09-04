@@ -8,7 +8,7 @@ CC = gcc
 .PHONY: all clean debug
 
 all: $(PROGRAM)
-$(PROGRAM): $(OBJS) lib/libmsgq.a
+$(PROGRAM): lib/libmsgq.a $(OBJS)
 	$(CC) $(CFLAGS) $(OBJS) $(LDLIBS) -o $@ $(LDFLAGS)
 debug:
 	$(CC) $(CFLAGS) -g $^ $(LDLIBS) -o $@ $(LDFLAGS)
