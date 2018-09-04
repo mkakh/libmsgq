@@ -3,7 +3,7 @@
 
 AC_PREREQ([2.69])
 AC_INIT([libmsgq], [1.0], [akhs3214@gmail.com])
-AC_CONFIG_SRCDIR([inc/msg_queue.h])
+AC_CONFIG_SRCDIR([inc/libmsgq.h])
 AC_CONFIG_HEADERS([config.h])
 AM_INIT_AUTOMAKE([foreign])
 AC_PROG_RANLIB
