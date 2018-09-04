@@ -1,0 +1,16 @@
+Makefile
+Makefile.in
+aclocal.m4
+autom4te.cache
+compile
+config.*
+configure
+install-sh
+depcomp
+lib
+missing
+src/.deps
+src/Makefile*
+src/libmsgq*
+stamp-h1
+sample/odd_even
