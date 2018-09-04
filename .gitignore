@@ -11,6 +11,5 @@ lib
 missing
 src/.deps
 src/Makefile*
-src/libmsgq*
 stamp-h1
 sample/odd_even

@@ -1,8 +1,8 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <mqueue.h>
-#include "../inc/lib.h"
-#include "../inc/msg_queue.h"
+#include "../inc/mylib.h"
+#include "../inc/libmsgq.h"
 
 /**************************************************
  * 関数名: mq_close_wrapper
