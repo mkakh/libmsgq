@@ -13,7 +13,7 @@ $(PROGRAM): lib/libmsgq.a $(OBJS)
 debug:
 	$(CC) $(CFLAGS) -g $^ $(LDLIBS) -o $@ $(LDFLAGS)
 clean:
-	$(RM) $(PROGRAM)
+	$(RM) $(PROGRAM) $(OBJS)
 	rm -rf lib include
 lib/libmsgq.a : ../../src/msg_queue.c ../../src/lib.c
 	/bin/bash -c "cd ../../ &&  autoreconf -fi && ./configure --prefix=$(PWD) && make -j8 && make install"
