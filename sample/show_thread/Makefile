@@ -15,5 +15,5 @@ debug:
 clean:
 	$(RM) $(PROGRAM) $(OBJS)
 	rm -rf lib include
-lib/libmsgq.a : ../../src/msg_queue.c ../../src/lib.c
+lib/libmsgq.a : ../../src/libmsgq.c ../../src/mylib.c
 	/bin/bash -c "cd ../../ &&  autoreconf -fi && ./configure --prefix=$(PWD) && make -j8 && make install"
