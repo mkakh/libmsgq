@@ -3,7 +3,8 @@
 #include <pthread.h>
 #include <unistd.h>
 #include "../../inc/lib.h"
-#include "../../inc/msg_queue.h"
+//#include "../../inc/msg_queue.h"
+#include "include/msg_queue.h"
 #define MAX_THREAD 8
 
 static void *subthread(void *vMsgQue) {
