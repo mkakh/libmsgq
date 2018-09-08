@@ -7,7 +7,7 @@
  **************************************************/
 #define FILE_MODE (S_IRUSR | S_IWUSR | S_IRGRP | S_IROTH)
 #define MSG_QUE_SEND(a, b, c, d) mq_send(a->mqd, (void *)b, c, d)
-#define MSG_QUE_CREATE(a) mq_open_wrapper(a)
+#define MSG_QUE_CREATE(a, b) mq_open_wrapper(a, b)
 #define MSG_QUE_READ(a, b, c, d) mq_receive_wrapper(a, b, c, d)
 #define MSG_QUE_CLOSE(a) mq_close_wrapper(a)
 #define MAX_QUEUE_NAME_SIZE 1000
@@ -35,10 +35,11 @@ void mq_close_wrapper(MSG_QUEUE_T *msgQue);
 /**************************************************
  * 関数名: mq_open_wrapper
  * 引数  : const char *name  キューの名前
+ *         int oflag  オープン時のフラグ(O_RDWR等)
  * 内容  : メッセージキューを新規作成する
  * 作成日: 2018/09/01
  **************************************************/
-MSG_QUEUE_T *mq_open_wrapper(const char *name);
+MSG_QUEUE_T *mq_open_wrapper(const char *name, int oflag);
 
 /**************************************************
  * 関数名: mq_receive_wrapper
