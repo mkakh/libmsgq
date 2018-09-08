@@ -14,7 +14,7 @@ void msgq_close(msgq_t *msgQue) {
     mqd_t mqd = msgQue->mqd;
     const char *name = msgQue->name;
     char buf[MAX_QUEUE_NAME_SIZE+1] = {0};
-    snprintf(buf, MAX_QUEUE_NAME_SIZE, "/que_%s", name);
+    snprintf(buf, MAX_QUEUE_NAME_SIZE, "/%s", name);
     mq_close(mqd);
     mq_unlink(buf);
 }
@@ -29,7 +29,7 @@ void msgq_close(msgq_t *msgQue) {
 msgq_t *msgq_open(const char *name, int oflag) {
     msgq_t *tmp = calloc(1, sizeof(msgq_t));
     char buf[MAX_QUEUE_NAME_SIZE+1] = {0};
-    snprintf(buf, MAX_QUEUE_NAME_SIZE, "/que_%s", name);
+    snprintf(buf, MAX_QUEUE_NAME_SIZE, "/%s", name);
     if (oflag == 0)
         oflag = O_RDWR;
     if ((tmp->mqd = mq_open(buf, oflag | O_CREAT , FILE_MODE, NULL)) == -1) {
@@ -55,7 +55,7 @@ int msgq_receive(msgq_t *msgQueue, ULONG *msg_ptr, size_t msg_len, unsigned int 
     char buf[MAX_QUEUE_NAME_SIZE+1] = {0};
     mqd_t mqd;
 
-    snprintf(buf, MAX_QUEUE_NAME_SIZE, "/que_%s", msgQueue->name);
+    snprintf(buf, MAX_QUEUE_NAME_SIZE, "/%s", msgQueue->name);
 
     if ((mqd = mq_open(buf, O_RDONLY)) == -1) {
         PERROR(__FUNCTION__);
