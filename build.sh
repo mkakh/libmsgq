@@ -8,3 +8,4 @@ if [ -z "$PREFIX" ];then
 else
     make --prefix="$PREFIX"
     make install
+fi
