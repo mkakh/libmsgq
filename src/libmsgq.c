@@ -6,11 +6,11 @@
 
 /**************************************************
  * 関数名: msgq_close
- * 引数  : MSG_QUEUE_T *msgQue  メッセージキュー構造体
+ * 引数  : msgq_t *msgQue  メッセージキュー構造体
  * 内容  : メッセージキューを閉じて削除する
  * 作成日: 2018/09/01
  **************************************************/
-void msgq_close(MSG_QUEUE_T *msgQue) {
+void msgq_close(msgq_t *msgQue) {
     mqd_t mqd = msgQue->mqd;
     const char *name = msgQue->name;
     char buf[MAX_QUEUE_NAME_SIZE+1] = {0};
@@ -26,8 +26,8 @@ void msgq_close(MSG_QUEUE_T *msgQue) {
  * 内容  : メッセージキューを開く（存在しない場合は新規作成）
  * 作成日: 2018/09/08
  **************************************************/
-MSG_QUEUE_T *msgq_open(const char *name, int oflag) {
-    MSG_QUEUE_T *tmp = calloc(1, sizeof(MSG_QUEUE_T));
+msgq_t *msgq_open(const char *name, int oflag) {
+    msgq_t *tmp = calloc(1, sizeof(msgq_t));
     char buf[MAX_QUEUE_NAME_SIZE+1] = {0};
     snprintf(buf, MAX_QUEUE_NAME_SIZE, "/que_%s", name);
     if (oflag == 0)
@@ -42,14 +42,14 @@ MSG_QUEUE_T *msgq_open(const char *name, int oflag) {
 
 /**************************************************
  * 関数名: msgq_receive
- * 引数  : MSG_QUEUE_T  メッセージキュー構造体
+ * 引数  : msgq_t  メッセージキュー構造体
  *         ULONG *msg_ptr  メッセージの格納先（サイズはULONG*4）
  *         size_t msg_len  メッセージ格納先のサイズ
  *         unsigned *msg_prio プライオリティ
  * 内容  : メッセージを受け取る
  * 作成日: 2018/09/01
  **************************************************/
-int msgq_receive(MSG_QUEUE_T *msgQueue, ULONG *msg_ptr, size_t msg_len, unsigned int *msg_prio) {
+int msgq_receive(msgq_t *msgQueue, ULONG *msg_ptr, size_t msg_len, unsigned int *msg_prio) {
     ULONG *ulBuf;
     struct mq_attr attr;
     char buf[MAX_QUEUE_NAME_SIZE+1] = {0};
