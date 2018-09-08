@@ -29,6 +29,8 @@ MSG_QUEUE_T *mq_open_wrapper(const char *name, int oflag) {
     MSG_QUEUE_T *tmp = calloc(1, sizeof(MSG_QUEUE_T));
     char buf[MAX_QUEUE_NAME_SIZE+1] = {0};
     snprintf(buf, MAX_QUEUE_NAME_SIZE, "/que_%s", name);
+    if (oflag == 0)
+        oflag = O_RDWR;
     if ((tmp->mqd = mq_open(buf, oflag | O_CREAT , FILE_MODE, NULL)) == -1) {
         PERROR(__FUNCTION__);
         exit(EXIT_FAILURE);
