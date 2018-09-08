@@ -5,12 +5,12 @@
 #include "../inc/libmsgq.h"
 
 /**************************************************
- * 関数名: mq_close_wrapper
+ * 関数名: msgq_close
  * 引数  : MSG_QUEUE_T *msgQue  メッセージキュー構造体
  * 内容  : メッセージキューを閉じて削除する
  * 作成日: 2018/09/01
  **************************************************/
-void mq_close_wrapper(MSG_QUEUE_T *msgQue) {
+void msgq_close(MSG_QUEUE_T *msgQue) {
     mqd_t mqd = msgQue->mqd;
     const char *name = msgQue->name;
     char buf[MAX_QUEUE_NAME_SIZE+1] = {0};
@@ -20,12 +20,13 @@ void mq_close_wrapper(MSG_QUEUE_T *msgQue) {
 }
 
 /**************************************************
- * 関数名: mq_open_wrapper
+ * 関数名: msgq_open
  * 引数  : const char *name  キューの名前
- * 内容  : メッセージキューを新規作成する
- * 作成日: 2018/09/01
+ *         int oflag  オープン時のフラグ（0の場合，O_RDWRになる）
+ * 内容  : メッセージキューを開く（存在しない場合は新規作成）
+ * 作成日: 2018/09/08
  **************************************************/
-MSG_QUEUE_T *mq_open_wrapper(const char *name, int oflag) {
+MSG_QUEUE_T *msgq_open(const char *name, int oflag) {
     MSG_QUEUE_T *tmp = calloc(1, sizeof(MSG_QUEUE_T));
     char buf[MAX_QUEUE_NAME_SIZE+1] = {0};
     snprintf(buf, MAX_QUEUE_NAME_SIZE, "/que_%s", name);
@@ -40,7 +41,7 @@ MSG_QUEUE_T *mq_open_wrapper(const char *name, int oflag) {
 }
 
 /**************************************************
- * 関数名: mq_receive_wrapper
+ * 関数名: msgq_receive
  * 引数  : MSG_QUEUE_T  メッセージキュー構造体
  *         ULONG *msg_ptr  メッセージの格納先（サイズはULONG*4）
  *         size_t msg_len  メッセージ格納先のサイズ
@@ -48,7 +49,7 @@ MSG_QUEUE_T *mq_open_wrapper(const char *name, int oflag) {
  * 内容  : メッセージを受け取る
  * 作成日: 2018/09/01
  **************************************************/
-int mq_receive_wrapper(MSG_QUEUE_T *msgQueue, ULONG *msg_ptr, size_t msg_len, unsigned int *msg_prio) {
+int msgq_receive(MSG_QUEUE_T *msgQueue, ULONG *msg_ptr, size_t msg_len, unsigned int *msg_prio) {
     ULONG *ulBuf;
     struct mq_attr attr;
     char buf[MAX_QUEUE_NAME_SIZE+1] = {0};
