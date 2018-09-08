@@ -57,10 +57,7 @@ int msgq_receive(msgq_t *msgQueue, ULONG *msg_ptr, size_t msg_len, unsigned int 
 
     snprintf(buf, MAX_QUEUE_NAME_SIZE, "/%s", msgQueue->name);
 
-    if ((mqd = mq_open(buf, O_RDONLY)) == -1) {
-        PERROR(__FUNCTION__);
-        exit(EXIT_FAILURE);
-    }
+    mqd = msgQueue->mqd;
 
     mq_getattr(mqd, &attr);
     ulBuf = calloc(1, attr.mq_msgsize);
@@ -68,7 +65,6 @@ int msgq_receive(msgq_t *msgQueue, ULONG *msg_ptr, size_t msg_len, unsigned int 
         PERROR(__FUNCTION__);
         return -1;
     }
-    mq_close(mqd);
     memcpy(msg_ptr, ulBuf, msg_len);
     return 0;
 }
