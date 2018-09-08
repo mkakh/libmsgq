@@ -15,3 +15,9 @@
 |msgq_send(msgq_t *msgQueue, const unsigned long *msg_ptr, size_t msg_len, unsigned int prio)| メッセージを送信する．|
 |msgq_receive(msgq_t *msgQueue, unsigned long *msg_ptr, size_t msg_len, unsigned int *msg_prio) | メッセージを受け取ってmsg_ptrに格納する．|
 |msgq_close(msgq_t *msgQueue) | メッセージキューを閉じて削除する．|
+
+## Usage
+
+`build.sh`を実行するとライブラリが生成，インストールされます．
+
+`PREFIX="subdir_path" ./build.sh`のようにして，手元のディレクトリにインストールして使うことをおすすめします．
