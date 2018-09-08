@@ -1,11 +1,18 @@
 #!/usr/bin/env bash
 
-set -eu
+set -e
+cd `dirname $0`
+
 autoreconf -fi
 if [ -z "$PREFIX" ];then
-    make
-    make install
+    ./configure
 else
-    make --prefix="$PREFIX"
-    make install
+    if [ "/" -eq "${PREFIX:0:1}" ]; then
+        ./configure --prefix="$PREFIX"
+    else
+        ./configure --prefix="$OLDPWD/$PREFIX"
+    fi
 fi
+
+make
+make install
